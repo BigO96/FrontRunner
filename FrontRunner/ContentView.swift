@@ -2,20 +2,34 @@
 //  ContentView.swift
 //  FrontRunner
 //
-//  Created by Oscar Epp on 4/22/24.
+//  Created by Oscar Epp on 4/21/24.
 //
 
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView{
+            
+            RunningView()
+                .tabItem {
+                    Label("Groups", systemImage: "person.3.fill")
+                }
+            
+            Text("Run")
+                .tabItem {
+                    Label("Run", systemImage: "figure.run")
+                    
+                }
+            
+            Text("Leaderboard")
+                .tabItem {
+                    Label("Leaderboard", systemImage: "crown.fill")
+                }
+            
+    
+            
         }
-        .padding()
     }
 }
 
