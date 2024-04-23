@@ -12,6 +12,10 @@
 		E6E83B332BD6DA60008B3F37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6E83B322BD6DA60008B3F37 /* Assets.xcassets */; };
 		E6E83B362BD6DA60008B3F37 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6E83B352BD6DA60008B3F37 /* Preview Assets.xcassets */; };
 		E6E83B3D2BD6DA91008B3F37 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E83B3C2BD6DA91008B3F37 /* TestView.swift */; };
+		E6E83B402BD810D5008B3F37 /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E83B3F2BD810D5008B3F37 /* CloudKitUtility.swift */; };
+		E6E83B422BD81419008B3F37 /* SomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E83B412BD81419008B3F37 /* SomeView.swift */; };
+		E6E83B472BD83FC6008B3F37 /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E83B462BD83FC5008B3F37 /* GroupView.swift */; };
+		E6E83B492BD84040008B3F37 /* RunsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E83B482BD84040008B3F37 /* RunsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		E6E83B352BD6DA60008B3F37 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E6E83B3C2BD6DA91008B3F37 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		E6E83B3E2BD6DAC1008B3F37 /* FrontRunner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FrontRunner.entitlements; sourceTree = "<group>"; };
+		E6E83B3F2BD810D5008B3F37 /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
+		E6E83B412BD81419008B3F37 /* SomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeView.swift; sourceTree = "<group>"; };
+		E6E83B462BD83FC5008B3F37 /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
+		E6E83B482BD84040008B3F37 /* RunsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +65,10 @@
 				E6E83B3E2BD6DAC1008B3F37 /* FrontRunner.entitlements */,
 				E6E83B2E2BD6DA5F008B3F37 /* FrontRunnerApp.swift */,
 				E6E83B302BD6DA5F008B3F37 /* ContentView.swift */,
+				E6E83B432BD83FA4008B3F37 /* Views */,
 				E6E83B3C2BD6DA91008B3F37 /* TestView.swift */,
+				E6E83B3F2BD810D5008B3F37 /* CloudKitUtility.swift */,
+				E6E83B412BD81419008B3F37 /* SomeView.swift */,
 				E6E83B322BD6DA60008B3F37 /* Assets.xcassets */,
 				E6E83B342BD6DA60008B3F37 /* Preview Content */,
 			);
@@ -70,6 +81,31 @@
 				E6E83B352BD6DA60008B3F37 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E6E83B432BD83FA4008B3F37 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E6E83B482BD84040008B3F37 /* RunsView.swift */,
+				E6E83B442BD83FA9008B3F37 /* GroupsView */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E6E83B442BD83FA9008B3F37 /* GroupsView */ = {
+			isa = PBXGroup;
+			children = (
+				E6E83B452BD83FB0008B3F37 /* GroupView */,
+			);
+			path = GroupsView;
+			sourceTree = "<group>";
+		};
+		E6E83B452BD83FB0008B3F37 /* GroupView */ = {
+			isa = PBXGroup;
+			children = (
+				E6E83B462BD83FC5008B3F37 /* GroupView.swift */,
+			);
+			path = GroupView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -144,7 +180,11 @@
 			files = (
 				E6E83B3D2BD6DA91008B3F37 /* TestView.swift in Sources */,
 				E6E83B312BD6DA5F008B3F37 /* ContentView.swift in Sources */,
+				E6E83B472BD83FC6008B3F37 /* GroupView.swift in Sources */,
 				E6E83B2F2BD6DA5F008B3F37 /* FrontRunnerApp.swift in Sources */,
+				E6E83B402BD810D5008B3F37 /* CloudKitUtility.swift in Sources */,
+				E6E83B422BD81419008B3F37 /* SomeView.swift in Sources */,
+				E6E83B492BD84040008B3F37 /* RunsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,17 +7,59 @@
 
 import SwiftUI
 import CloudKit
+import Combine
 
-struct FruitModel: Hashable {
+protocol CloudKitableProtocol {
+    init?(record: CKRecord)
+    var record: CKRecord { get }
+}
+
+//struct CloudKitFruitModelNames {
+//    static let name = "name"
+//}
+
+struct FruitModel: Hashable, CloudKitableProtocol {
     let name: String
+    let count: Int
     let imageURL: URL?
     let record: CKRecord
+    
+    init?(record: CKRecord) {
+        guard let name = record["name"] as? String else { return nil }
+        self.name = name
+        let count = record["count"] as? Int
+        self.count = count ?? 0
+        let imageAsset = record["image"] as? CKAsset
+        self.imageURL = imageAsset?.fileURL
+        self.record = record
+    }
+    
+    init?(name: String, imageURL: URL?, count: Int?) {
+        let record = CKRecord(recordType: "Fruits")
+        record["name"] = name
+        if let url = imageURL {
+            let asset = CKAsset(fileURL: url)
+            record["image"] = asset
+        }
+        if let count = count {
+            record["count"] = count
+        }
+        self.init(record: record)
+    }
+    
+    func update(newName: String) -> FruitModel? {
+        let record = record
+        record["name"] = newName
+        return FruitModel(record: record)
+    }
+    
 }
 
 class CloudKitCrudRunningViewModel: ObservableObject {
     
     @Published var text: String = ""
     @Published var fruits: [FruitModel] = []
+    var cancellables = Set<AnyCancellable>()
     
     init() {
         fetchItems()
@@ -29,94 +71,61 @@ class CloudKitCrudRunningViewModel: ObservableObject {
     }
     
     private func addItem(name: String) {
-        let newFruit = CKRecord(recordType: "Fruits")
-        
-        newFruit["name"] = name
-        
         guard
             let image = UIImage(named: "IMG_1811"),
-            let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("IMG_1811.jpg"),
+        let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("IMG_1811.jpg"),
             let data = image.jpegData(compressionQuality: 1.0) else { return }
         
         do {
             try data.write(to: url)
-            let asset = CKAsset(fileURL: url)
-            newFruit["image"] = asset
-            saveItem(record: newFruit)
+            guard let newFruit = FruitModel(name: name, imageURL: url, count: 5) else { return }
+
+            CloudKitUtility.add(item: newFruit) { result in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.fetchItems() /// Fix at 1:18:00
+                }
+            }
         } catch let error {
             print(error)
-        }
-        
-        saveItem(record: newFruit)
-    }
-    
-    private func saveItem(record: CKRecord) {
-        CKContainer.default().publicCloudDatabase.save(record) { returnedRecord, returnedError in
-            print("Record: \(String(describing: returnedRecord))")
-            print("Error: \(String(describing: returnedError))")
-            
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                self.text = ""
-                self.fetchItems()
-            }
         }
     }
     
     func fetchItems() {
-        
-//        let predicate = NSPredicate(format: "name = &@", argumentArray: ["Banana"])
         let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: "Fruits", predicate: predicate)
-        query.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        let queryOperation = CKQueryOperation(query: query)
-//        queryOperation.resultsLimit = 10
-        
-        var returnedItems: [FruitModel] = []
-
-        queryOperation.recordMatchedBlock = { (returnedRecordID, returnedResult) in
-            switch returnedResult {
-            case .success(let record):
-                guard let name = record["name"] as? String else { return }
-                let imageAsset = record["image"] as? CKAsset
-                let imageURL = imageAsset?.fileURL
-                returnedItems.append(FruitModel(name: name, imageURL: imageURL, record: record))
-            case .failure(let error):
-                print("Error recordingMatchedBlock: \(error)")
-            }
-        }
-        
-        queryOperation.queryResultBlock = { [weak self] returnedResult in
-            print("RETURNED RESULT: \(returnedResult)")
-            DispatchQueue.main.async{
+        let recordType = "Fruits"
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: nil, resultsLimit: nil)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                
+            } receiveValue: { [weak self] returnedItems in
                 self?.fruits = returnedItems
             }
-        }
-        
-        addOperation(operation: queryOperation)
+            .store(in: &cancellables)
     }
     
-    func addOperation(operation: CKDatabaseOperation) {
-        CKContainer.default().publicCloudDatabase.add(operation)
-    }
-    
+
     func updateItem(fruit: FruitModel) {
-        let record = fruit.record
-        record["name"] = "New Name"
-        saveItem(record: record)
+        guard let newFruit = fruit.update(newName: "Woah!") else { return }
+        CloudKitUtility.update(item: newFruit) { [weak self] result in
+            print("UPDATE COMPLETED")
+            self?.fetchItems()
+        }
     }
     
     func deleteItem(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
         let fruit = fruits[index]
-        let record = fruit.record
         
-        CKContainer.default().publicCloudDatabase.delete(withRecordID: record.recordID) { [weak self] returnedRecordID, returnedError in
-            DispatchQueue.main.async {
+        CloudKitUtility.delete(item: fruit)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                
+            } receiveValue: { [weak self] success in
+                print("Deleted: \(success)")
                 self?.fruits.remove(at: index)
             }
-        }
+            .store(in: &cancellables)
     }
-    
 }
 
 

@@ -16,7 +16,7 @@ struct ContentView: View {
                     Label("Groups", systemImage: "person.3.fill")
                 }
             
-            Text("Run")
+            RunsView()
                 .tabItem {
                     Label("Run", systemImage: "figure.run")
                     

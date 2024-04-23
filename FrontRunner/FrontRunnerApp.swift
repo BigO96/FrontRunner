@@ -12,6 +12,7 @@ struct FrontRunnerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+//            CloudKitUserBootcamp()
         }
     }
 }
